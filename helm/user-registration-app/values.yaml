@@ -1,9 +1,9 @@
 replicaCount: 2
 
 image:
-  repository: user-registration-app
-  tag: latest
-  pullPolicy: IfNotPresent
+  repository: parmar/user-registration-app
+  tag: 1.0.2
+  pullPolicy: Always
 
 nameOverride: ""
 fullnameOverride: ""
@@ -14,10 +14,10 @@ service:
 
 ingress:
   enabled: true
-  className: ""
+  className: nginx
   annotations: {}
   hosts:
-    - host: user-registration.example.com
+    - host: onetouchpro.de
       paths:
         - path: /
           pathType: Prefix

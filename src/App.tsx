@@ -1,9 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import RegistrationForm from './components/RegistrationForm';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import RegistrationWindow from "./components/RegistrationWindow";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 
 const theme = createTheme({
   palette: {

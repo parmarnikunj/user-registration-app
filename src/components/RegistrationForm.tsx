@@ -6,7 +6,7 @@ import {
     Button,
     TextField,
     Typography,
-    CircularProgress, Autocomplete,
+    CircularProgress, Autocomplete, Link,
 } from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../store/store';
@@ -24,7 +24,7 @@ const validationSchema = Yup.object({
         .email('Invalid email address')
         .required('Email is required'),
     phone: Yup.string()
-        .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
+        .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 digits')
         .required('Phone number is required'),
     address: Yup.string(),
     city: Yup.string()
@@ -70,7 +70,8 @@ const RegistrationForm: React.FC = () => {
         },
     });
 
-    const popularCities = ['Berlin', 'Magdeburg', 'Münich', "Düsseldorf", "Dresden"]
+    const popularCities = ['Berlin', 'Magdeburg', 'Münich', "Düsseldorf", "Dresden"];
+    const genders = ['Male','Female'];
 
     return (
             <div>
@@ -118,16 +119,24 @@ const RegistrationForm: React.FC = () => {
                         helperText={formik.touched.email && formik.errors.email}
                         margin="normal"
                     />
-                    <TextField
-                        fullWidth
-                        id="gender"
-                        name="gender"
-                        label="Gender"
-                        value={formik.values.gender}
-                        onChange={formik.handleChange}
-                        error={formik.touched.gender && Boolean(formik.errors.gender)}
-                        helperText={formik.touched.gender && formik.errors.gender}
-                        margin="normal"
+                    <Autocomplete
+                        options={genders}
+                        disablePortal
+                        sx={{width: 300}}
+                        renderInput={(params) =>
+                            <TextField
+                                {...params}
+                                fullWidth
+                                id="gender"
+                                name="gender"
+                                label="Gender"
+                                value={formik.values.gender}
+                                onChange={formik.handleChange}
+                                error={formik.touched.gender && Boolean(formik.errors.gender)}
+                                helperText={formik.touched.gender && formik.errors.gender}
+                                margin="normal"
+                            />
+                    }
                     />
                     <TextField
                         fullWidth
