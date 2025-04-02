@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://onetouchpro.de';
+const API_URL = process.env.REACT_APP_API_URL || 'https://onetouchpro.de';
 
 export interface UserData {
     firstName: string;

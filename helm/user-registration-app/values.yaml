@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: parmar/user-registration-app
-  tag: 1.0.2
+  tag: 1.0.3
   pullPolicy: Always
 
 nameOverride: ""
@@ -23,6 +23,7 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+
   tls:
     - hosts:
       - onetouchpro.de
