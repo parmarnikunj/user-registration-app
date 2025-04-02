@@ -46,6 +46,7 @@ const RegistrationForm: React.FC = () => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
+            console.log("form values ",values);
             try {
                 dispatch(registerStart());
                 const userData: UserData = {
@@ -123,6 +124,10 @@ const RegistrationForm: React.FC = () => {
                         options={genders}
                         disablePortal
                         sx={{width: 300}}
+                        value={formik.values.gender}
+                        onChange={(event, newValue) => {
+                            formik.setFieldValue('gender', newValue);
+                        }}
                         renderInput={(params) =>
                             <TextField
                                 {...params}
@@ -130,13 +135,11 @@ const RegistrationForm: React.FC = () => {
                                 id="gender"
                                 name="gender"
                                 label="Gender"
-                                value={formik.values.gender}
-                                onChange={formik.handleChange}
                                 error={formik.touched.gender && Boolean(formik.errors.gender)}
                                 helperText={formik.touched.gender && formik.errors.gender}
                                 margin="normal"
                             />
-                    }
+                        }
                     />
                     <TextField
                         fullWidth
@@ -166,6 +169,10 @@ const RegistrationForm: React.FC = () => {
                         options={popularCities}
                         disablePortal
                         sx={{width: 300}}
+                        value={formik.values.city}
+                        onChange={(event, newValue) => {
+                            formik.setFieldValue('city', newValue);
+                        }}
                         renderInput={(params) =>
                             <TextField
                                 {...params}
@@ -173,8 +180,6 @@ const RegistrationForm: React.FC = () => {
                                 id="city"
                                 name="city"
                                 label="City"
-                                value={formik.values.city}
-                                onChange={formik.handleChange}
                                 error={formik.touched.city && Boolean(formik.errors.city)}
                                 helperText={formik.touched.city && formik.errors.city}
                                 margin="normal"
