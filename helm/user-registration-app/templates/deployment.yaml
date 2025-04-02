@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "user-registration-app.fullname" . }}
+  name: {{ include "user-registration-app.name" . }}
   labels:
     {{- include "user-registration-app.labels" . | nindent 4 }}
 spec:
