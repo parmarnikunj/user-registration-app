@@ -1,12 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface User {
-  registrationNumber: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-}
+import { RegisterResponse, User } from '../../services/userService';
 
 interface AuthState {
   isPrivacyPolicyOn: boolean;

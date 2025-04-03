@@ -1,17 +1,22 @@
 import React from 'react';
 import {useFormik} from 'formik';
+import dayjs from 'dayjs';
 import * as Yup from 'yup';
 import {
     Box,
     Button,
     TextField,
     Typography,
-    CircularProgress, Autocomplete, Link,
+    CircularProgress, Autocomplete,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../store/store';
 import {registerStart, registerSuccess, registerFailure} from '../features/auth/authSlice';
-import {userService, UserData} from '../services/userService';
+import {userService} from '../services/userService';
+import {DemoContainer} from "@mui/x-date-pickers/internals/demo";
 
 const validationSchema = Yup.object({
     firstName: Yup.string()
@@ -27,7 +32,11 @@ const validationSchema = Yup.object({
         .matches(/^[0-9]{10,11}$/, 'Phone number must be 10 digits')
         .required('Phone number is required'),
     address: Yup.string(),
-    city: Yup.string()
+    city: Yup.string(),
+    birthdate: Yup.date()
+        .nullable()
+        .required('Birthdate is required')
+        .max(new Date(), 'Birthdate cannot be in the future')
 });
 
 const RegistrationForm: React.FC = () => {
@@ -43,13 +52,13 @@ const RegistrationForm: React.FC = () => {
             address: '',
             city: '',
             gender:'',
+            birthdate: null,
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log("form values ",values);
             try {
                 dispatch(registerStart());
-                const userData: UserData = {
+                const response = await userService.register({
                     firstName: values.firstName,
                     lastName: values.lastName,
                     email: values.email,
@@ -57,24 +66,32 @@ const RegistrationForm: React.FC = () => {
                     address: values.address,
                     city: values.city,
                     gender: values.gender,
-                };
-                const response = await userService.register(userData);
-                if (response) {
-                    dispatch(registerSuccess(response));
+                    birthdate: values.birthdate ? dayjs(values.birthdate).format('YYYY-MM-DD') : null,
+                });
+                if (response.success && response.user) {
+                    dispatch(registerSuccess(response.user));
                 } else {
-                    dispatch(registerFailure('Registration successful but no user data received'));
+                    dispatch(registerFailure(response.message || 'Registration failed'));
                 }
-            } catch (err) {
-                const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.';
-                dispatch(registerFailure(errorMessage));
+            } catch (error) {
+                dispatch(registerFailure(error instanceof Error ? error.message : 'An error occurred'));
             }
         },
     });
 
-    const popularCities = ['Berlin', 'Magdeburg', 'Münich', "Düsseldorf", "Dresden"];
+    const popularCities = [
+        'Berlin',
+        'Magdeburg',
+        'Münich',
+        'Düsseldorf',
+        'Dresden',
+        'Dortmund',
+        'Nürnberg'
+    ];
     const genders = ['Male','Female'];
 
     return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
                 <Typography component="h1" variant="h5" align="center" gutterBottom>
                     Ram Navmi, Hari Jayanti
@@ -141,6 +158,22 @@ const RegistrationForm: React.FC = () => {
                             />
                         }
                     />
+                    <DatePicker
+                        label="Birthdate"
+                        value={formik.values.birthdate ? dayjs(formik.values.birthdate).startOf('day') : null}
+                        onChange={(newValue) => {
+                            formik.setFieldValue('birthdate', newValue ? newValue.startOf('day').toDate() : null);
+                        }}
+                        format="DD/MM/YYYY"
+                        slotProps={{
+                            textField: {
+                                fullWidth: true,
+                                margin: 'normal',
+                                error: formik.touched.birthdate && Boolean(formik.errors.birthdate),
+                                helperText: formik.touched.birthdate && formik.errors.birthdate,
+                            }
+                        }}
+                    />
                     <TextField
                         fullWidth
                         id="phone"
@@ -202,6 +235,7 @@ const RegistrationForm: React.FC = () => {
                 </Box>
                 )}
             </div>
+        </LocalizationProvider>
     );
 };
 
