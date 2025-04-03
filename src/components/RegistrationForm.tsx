@@ -68,10 +68,10 @@ const RegistrationForm: React.FC = () => {
                     gender: values.gender,
                     birthdate: values.birthdate ? dayjs(values.birthdate).format('YYYY-MM-DD') : null,
                 });
-                if (response.success && response.user) {
-                    dispatch(registerSuccess(response.user));
+                if (response) {
+                    dispatch(registerSuccess(response));
                 } else {
-                    dispatch(registerFailure(response.message || 'Registration failed'));
+                    dispatch(registerFailure('Registration failed'));
                 }
             } catch (error) {
                 dispatch(registerFailure(error instanceof Error ? error.message : 'An error occurred'));

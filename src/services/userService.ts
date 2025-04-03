@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'https://onetouchpro.de';
 
 export interface User {
   registrationNumber: string,
@@ -26,16 +26,22 @@ export interface UserData {
     birthdate: string | null;
 }
 
-export interface RegisterResponse {
-    success: boolean;
-    message: string;
-    user?: User;
-}
+// export interface UserRegistrationResponse {
+//     registrationNumber: string;
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//     phone: string;
+//     address: string;
+//     city: string;
+//     birthdate:string;
+// }
 
 class UserService {
-    async register(userData: UserData): Promise<RegisterResponse> {
+    async register(userData: UserData): Promise<User> {
         try {
-            const response = await axios.post(`${API_URL}/user/register`, userData);
+            const response = await axios.post(`${API_URL}/user`, userData);
+            console.log(response)
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
